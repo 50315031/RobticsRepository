@@ -11,6 +11,7 @@
 #include <frc/Timer.h>
 #include <frc/drive/DifferentialDrive.h>
 #include <frc/livewindow/LiveWindow.h>
+#include <frc/Talon.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -35,22 +36,27 @@ class Robot : public frc::TimedRobot {
     }
   }
 
-  void TeleopInit() override {}
+  void TeleopInit() override 
+  {
+    m_left.SetSpeed(0.5);
+    m_right.SetSpeed(0.5);
+  }
 
   void TeleopPeriodic() override {
     // Drive with arcade style (use right stick)
-    m_robotDrive.ArcadeDrive(m_stick.GetY(), m_stick.GetX());
+    m_robotDrive.TankDrive(l_stick.GetY(), r_stick.GetY());
   }
 
   void TestPeriodic() override {}
 
  private:
   // Robot drive system
-  frc::PWMVictorSPX m_left{0};
-  frc::PWMVictorSPX m_right{1};
+  frc::Talon m_left{4};
+  frc::Talon m_right{5};
   frc::DifferentialDrive m_robotDrive{m_left, m_right};
 
-  frc::Joystick m_stick{0};
+  frc::Joystick l_stick{0};
+  frc::Joystick r_stick{1};
   frc::LiveWindow& m_lw = *frc::LiveWindow::GetInstance();
   frc::Timer m_timer;
 };
